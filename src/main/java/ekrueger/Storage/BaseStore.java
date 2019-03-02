@@ -1,8 +1,13 @@
 package ekrueger.Storage;
 
-public class GroundWaterStore extends Store {
+public class BaseStore extends Store implements ProcessObserver {
 
-    public GroundWaterStore(double inputWater, double oldStore){
+    @Override
+    public void update(double waterStore) {
+        this.setWaterStore(waterStore);
+    }
+
+    public BaseStore(double inputWater, double oldStore){
         super(inputWater,oldStore);
     }
 
