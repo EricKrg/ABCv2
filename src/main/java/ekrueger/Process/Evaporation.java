@@ -71,11 +71,8 @@ public class Evaporation implements ProcessSubjects{
     public String toString() {
         return "Evaporation{" +
                 "potEvapo=" + potEvapo +
-                ", relHum14=" + relHum14 +
-                ", es=" + es +
                 ", waterStore=" + waterStore +
                 ", soilObs=" + soilObs +
-                ", environment=" + environment +
                 '}';
     }
 }

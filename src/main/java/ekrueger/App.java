@@ -11,7 +11,7 @@ public class App
     public static void main( String[] args )
     {
 
-        DataReader data = new DataReader("/home/eric/projects/abc2/data/klima_schmuecke.txt");
+        DataReader data = new DataReader("./data/klima_schmuecke.txt");
 
         ABCv2 myModel = new ABCv2(0, data.getEnvData(),true,true);
 

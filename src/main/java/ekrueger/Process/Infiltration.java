@@ -56,8 +56,8 @@ public class Infiltration implements ProcessSubjects {
     public String toString() {
         return "Infiltration{" +
                 "recharge=" + recharge +
-                ", soilObs=" + soilObs +
-                ", baseObs=" + baseObs +
+                ", soilObs=" + soilObs.getWaterStore() +
+                ", baseObs=" + baseObs.getWaterStore() +
                 ", potEvapo=" + potEvapo +
                 ", c=" + c +
                 '}';

@@ -3,6 +3,7 @@ package ekrueger.Model;
 import ekrueger.Logger;
 import ekrueger.Process.Evaporation;
 import ekrueger.Process.Infiltration;
+import ekrueger.Process.RunOff;
 import ekrueger.Storage.BaseStore;
 import ekrueger.Storage.SoilWaterStore;
 
@@ -52,20 +53,26 @@ public class ABCv2 {
             Infiltration infiltration = new Infiltration(soilWaterStore,baseStore,0.5, evaporation.getPotEvapo());
             infiltration.recharge();
 
+            //RunOff
+            RunOff runOff = new RunOff(soilWaterStore,baseStore);
+
+
             if(isVerbose()){
                 logger.log(init);
                 logger.log(evaporation);
                 logger.log(infiltration);
                 logger.log(soilWaterStore);
+                logger.log(runOff);
             }
             if(isTextOut()){
                 logger.writeLogFile(init);
                 logger.writeLogFile(evaporation);
                 logger.writeLogFile(infiltration);
                 logger.writeLogFile(soilWaterStore);
+                logger.writeLogFile(runOff);
             }
 
-            init = soilWaterStore.waterStore; // reset oldstore with new store value
+            //init = soilWaterStore.waterStore; // reset oldstore with new store value
             logger.save();
 
         }
