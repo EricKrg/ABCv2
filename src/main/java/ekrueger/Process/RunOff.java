@@ -6,17 +6,16 @@ import ekrueger.Storage.SoilWaterStore;
 import ekrueger.Storage.Store;
 
 public class RunOff {
-    private SoilWaterStore soilWaterStore;
-    private BaseStore baseStore;
-    private DepStore depStore;
+    public SoilWaterStore soilWaterStore;
+    public BaseStore baseStore;
+    public DepStore depStore;
     public double runOff;
 
     public RunOff(double a, double b, double c, DepStore inDeptStore, SoilWaterStore inSoil, BaseStore inBase){
         this.baseStore = inBase;
         this.soilWaterStore = inSoil;
         this.depStore = inDeptStore;
-        this.runOff = a* this.depStore.getWaterStore() +  b * this.soilWaterStore.getWaterStore() +
-                        c * this.baseStore.getWaterStore();
+        this.runOff = a * this.depStore.getWaterStore() + b * this.soilWaterStore.getWaterStore() + c * this.baseStore.getWaterStore();
     }
 
     public double getTotalRunOff() {

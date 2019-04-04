@@ -11,7 +11,7 @@ public class Calibrator {
     public double a;
     public double b;
     public double c;
-    private ABCv2 model;
+    public ABCv2 model;
     private DataReader calibData;
     private int[] iterator;
     public Map<Integer, Double> bestMap;
@@ -46,6 +46,7 @@ public class Calibrator {
         }
         Map<Integer, Double> bestPick = this.pickBestCorr();
 
+        double cor = 0;
         double nse = 0;
         ABCv2 bestModell = null;
         for(int modelNr : bestPick.keySet()){
@@ -54,16 +55,23 @@ public class Calibrator {
             if (newNse > nse){
                 nse = newNse;
                 bestModell = this.modelList.get(modelNr);
+                cor = bestPick.get(modelNr);
             }
         }
+
+        bestModell.setCalibFit("NSE", nse);
+        bestModell.setCalibFit("cor", cor);
         this.setModel(bestModell);
+
     }
 
     public Map<Integer, Double> pickBestCorr(){
         Map.Entry<Integer, Double> maxEntry = null;
         for (Map.Entry<Integer,Double> entry : this.bestMap.entrySet()) {
-            if (maxEntry == null || entry.getValue().compareTo(maxEntry.getValue()) > 0)
-            {
+            if(entry.getValue().isNaN()){
+                continue;
+            }
+            if (maxEntry == null || entry.getValue().compareTo(maxEntry.getValue()) > 0) {
                 maxEntry = entry;
             }
         }
@@ -104,7 +112,8 @@ public class Calibrator {
         double sigmay = Math.sqrt(syy / n -  sy * sy / n / n);
 
         // correlation is just a normalized covariation
-        return cov / sigmax / sigmay;
+        double cor = cov / sigmax / sigmay;
+        return cor;
     }
 
     public double nashSutcliffEff(ABCv2 bestPicks){

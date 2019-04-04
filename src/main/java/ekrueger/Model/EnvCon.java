@@ -12,6 +12,7 @@ the data from the data reader is put in this class
  */
 
 public class EnvCon {
+    public Date time;
     public double precip;
     public double minTemp;
     public double meanTemp;
@@ -58,6 +59,7 @@ public class EnvCon {
         this.setRelHum(inRelHum);
         this.setAbsHum(inAbsHum);
         this.setHaudeFactor(parseDate(date));
+        this.setTime(date);
     }
 
     private double getHaudePineFactor(int month){
@@ -69,6 +71,10 @@ public class EnvCon {
     }
     public double getHaude(){
         return this.haudeFactor;
+    }
+
+    public void setTime(String date) {
+        this.time = parseDate(date);
     }
 
     // generated getter setter

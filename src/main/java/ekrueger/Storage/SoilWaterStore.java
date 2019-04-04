@@ -1,7 +1,5 @@
 package ekrueger.Storage;
 
-import ekrueger.Model.EnvCon;
-
 public class SoilWaterStore extends Store implements ProcessObserver{
 
     /* to do
@@ -14,7 +12,7 @@ public class SoilWaterStore extends Store implements ProcessObserver{
         this.inputwater = inputWater;
     }
     @Override
-    public void update(double waterStore){
+    public void update(double waterStore){  // update on Evapo and infil
         this.outWater = this.inputwater - waterStore;
         this.setWaterStore(waterStore);
 

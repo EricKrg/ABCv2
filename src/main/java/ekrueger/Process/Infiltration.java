@@ -11,10 +11,6 @@ W = available soilwater = soilWaterStore.waterstore
 Y = potEvapo
  */
 
-/*
-todo:
-  - proper way to set c-ratio
- */
 
 public class Infiltration implements ProcessSubjects {
     public double recharge;
@@ -23,16 +19,16 @@ public class Infiltration implements ProcessSubjects {
     public double potEvapo;
     private double c;
 
-    public Infiltration(SoilWaterStore soilWaterStore, BaseStore baseStore,double inCratio, double inPotEvapo ){
+    public Infiltration(SoilWaterStore soilWaterStore, BaseStore baseStore,double inC, double inPotEvapo ){
         this.soilObs = soilWaterStore;
         this.baseObs = baseStore;
         this.potEvapo = inPotEvapo;
-        this.c = inCratio;
+        this.c = inC;
 
     }
 
     public void recharge(){ // calc recharge and update observing stores
-        this.recharge = this.c * (this.soilObs.getWaterStore() * this.potEvapo);
+        this.recharge = this.c * (this.soilObs.getWaterStore() - this.potEvapo);
         this.updateObs(this.recharge);
     }
 
