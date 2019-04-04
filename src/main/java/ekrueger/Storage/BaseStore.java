@@ -5,6 +5,7 @@ public class BaseStore extends Store implements ProcessObserver {
     @Override
     public void update(double waterStore) {
         this.setWaterStore(waterStore);
+        this.inWater = this.waterStore;
     }
 
     public BaseStore(double inputWater, double oldStore){

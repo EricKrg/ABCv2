@@ -5,8 +5,10 @@ import ekrueger.Process.Evaporation;
 import ekrueger.Process.Infiltration;
 import ekrueger.Process.RunOff;
 import ekrueger.Storage.BaseStore;
+import ekrueger.Storage.DepStore;
 import ekrueger.Storage.SoilWaterStore;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /*
@@ -21,15 +23,26 @@ public class ABCv2 {
     private static double storeInit;
     private static boolean verbose;
     private static boolean textOut;
+    private double a;
+    private double b;
+    private double c;
     public List<EnvCon> envData; // input environment data
     public Logger logger;
 
-    public ABCv2(double storeInit,List<EnvCon> envData, boolean inVerbose, boolean inTextOut){
+    public ABCv2(double storeInit,List<EnvCon> envData, boolean inVerbose, boolean inTextOut,
+                 double inA , double inB, double inC){
         this.setEnvData(envData);
         setStoreInit(storeInit);
+
+        a = inA;
+        b = inB;
+        c = inC;
+
         //
         textOut = inTextOut;
         verbose = inVerbose;
+
+
 
         this.logger = new Logger(this);
 
@@ -39,23 +52,25 @@ public class ABCv2 {
 
     }
 
-    public void excute(){
+    public ArrayList<Double> excute(){
         double init = storeInit;
+        ArrayList<Double> runOff = new ArrayList<>();
         for(EnvCon env:  this.envData){
-
+            // DEPT WATERSTORE
+            DepStore depStore = new DepStore(env.getPrecip(),init);
             // SOIL WATERSTORE
-            SoilWaterStore soilWaterStore = new SoilWaterStore(env.getPrecip(),init);
+            SoilWaterStore soilWaterStore = new SoilWaterStore(depStore.getOutWater(),init);
             BaseStore baseStore = new BaseStore(0,0); // empty, is filled with the first infiltration event
             // PROCESS EVAPORATION
             Evaporation evaporation = new Evaporation(soilWaterStore, env);
             evaporation.evaporate();
             // PROCESS INFILTRATION
-            Infiltration infiltration = new Infiltration(soilWaterStore,baseStore,0.5, evaporation.getPotEvapo());
+            Infiltration infiltration = new Infiltration(soilWaterStore,baseStore, c, evaporation.getPotEvapo());
             infiltration.recharge();
-
             //RunOff
-            RunOff runOff = new RunOff(soilWaterStore,baseStore);
+            RunOff tempRunoff = new RunOff(a,b,c,depStore,soilWaterStore,baseStore);
 
+            runOff.add(tempRunoff.runOff);
 
             if(isVerbose()){
                 logger.log(init);
@@ -76,6 +91,8 @@ public class ABCv2 {
             logger.save();
 
         }
+        return runOff;
+
     }
 
     // generated getter setter
@@ -112,4 +129,27 @@ public class ABCv2 {
     public static void setTextOut(boolean textOut) {
         ABCv2.textOut = textOut;
     }
+
+    public double getA() {
+        return this.a;
+    }
+    public  double getB() {
+        return this.b;
+    }
+    public  double getC() {
+        return this.c;
+    }
+
+    public void setA(double a) {
+        this.a = a;
+    }
+
+    public void setB(double b) {
+        this.b = b;
+    }
+
+    public void setC(double c) {
+        this.c = c;
+    }
 }
+

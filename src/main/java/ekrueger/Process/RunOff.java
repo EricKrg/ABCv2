@@ -1,18 +1,22 @@
 package ekrueger.Process;
 
 import ekrueger.Storage.BaseStore;
+import ekrueger.Storage.DepStore;
 import ekrueger.Storage.SoilWaterStore;
 import ekrueger.Storage.Store;
 
 public class RunOff {
     private SoilWaterStore soilWaterStore;
     private BaseStore baseStore;
+    private DepStore depStore;
     public double runOff;
 
-    public RunOff(SoilWaterStore inSoil, BaseStore inBase){
+    public RunOff(double a, double b, double c, DepStore inDeptStore, SoilWaterStore inSoil, BaseStore inBase){
         this.baseStore = inBase;
         this.soilWaterStore = inSoil;
-        this.runOff = this.baseStore.getWaterStore() + this.soilWaterStore.getWaterStore();
+        this.depStore = inDeptStore;
+        this.runOff = a* this.depStore.getWaterStore() +  b * this.soilWaterStore.getWaterStore() +
+                        c * this.baseStore.getWaterStore();
     }
 
     public double getTotalRunOff() {
@@ -37,8 +41,9 @@ public class RunOff {
     @Override
     public String toString() {
         return "RunOff{" +
-                "Intermediate runoff: " + soilWaterStore.getWaterStore() +
-                ",Slow runoff: " + baseStore.getWaterStore() +
+                "Fast runoff: " + depStore.getWaterStore() +
+                ", Intermediate runoff: " + soilWaterStore.getWaterStore() +
+                ", Slow runoff: " + baseStore.getWaterStore() +
                 ", total runOff: " + runOff +
                 '}';
     }
