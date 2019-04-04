@@ -18,6 +18,7 @@ public class DataReader {
     private String filePath;
     private File data;
     public List<EnvCon> envList = new ArrayList<EnvCon>();
+    public ArrayList<Double> calibList = new ArrayList<>();
 
 
     public DataReader(String inPath){
@@ -42,12 +43,16 @@ public class DataReader {
                 if(go){
                     //System.out.println(line);
                     String[] lineElements = line.split("\t"); // split by seperator
-                    EnvCon env = new EnvCon(  // create single environment
-                            Double.parseDouble(lineElements[1]), Double.parseDouble(lineElements[2]),
-                            Double.parseDouble(lineElements[3]), Double.parseDouble(lineElements[4]),
-                            Double.parseDouble(lineElements[5]), Double.parseDouble(lineElements[6]),
-                            Double.parseDouble(lineElements[7]), lineElements[0]);
-                    this.envList.add(env); // added to list
+                    if(lineElements.length > 2) {
+                        EnvCon env = new EnvCon(  // create single environment
+                                Double.parseDouble(lineElements[1]), Double.parseDouble(lineElements[2]),
+                                Double.parseDouble(lineElements[3]), Double.parseDouble(lineElements[4]),
+                                Double.parseDouble(lineElements[5]), Double.parseDouble(lineElements[6]),
+                                Double.parseDouble(lineElements[7]), lineElements[0]);
+                        this.envList.add(env); // added to list
+                    } else {
+                        this.calibList.add(Double.parseDouble(lineElements[1]));
+                    }
                 }
             }
         } catch (IOException e){
@@ -57,6 +62,9 @@ public class DataReader {
     }
     public List<EnvCon> getEnvData(){
         return this.envList;
+    }
+    public ArrayList<Double> getCalibData(){
+        return this.calibList;
     }
 
 }
