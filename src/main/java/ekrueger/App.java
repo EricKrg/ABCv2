@@ -22,8 +22,8 @@ public class App
 
 
         ABCv2 myModel = new ABCv2(0, data.getEnvData(),true,true,
-                calibrator.getA(), calibrator.getB(), calibrator.getC());
-
+                calibrator.getA(), calibrator.getB(), calibrator.getC(), calibData);
+        myModel.calibFit = calibrator.model.calibFit;
         myModel.excute();
 
 
