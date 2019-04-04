@@ -1,8 +1,10 @@
 package ekrueger.Model;
 
 import ekrueger.DataReader;
+import me.tongfei.progressbar.ProgressBar;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Calibrator {
 
@@ -25,38 +27,53 @@ public class Calibrator {
     }
 
     private void calibrate(){
+        ProgressBar pb = new ProgressBar("Calibrate",this.iterator.length);
+
         this.bestMap = new HashMap<Integer, Double>();
         for(int i = 0; i < this.iterator.length; i++){
+            pb.step();
             ArrayList <Double> resList = new ArrayList<Double>();
             Random r = new Random();
             double a = 0 + (1 - 0) * r.nextDouble();
-            double b = 0 + (8 - 0) * r.nextDouble();
+            double b = 0 + (1 - 0) * r.nextDouble();
             double c = 0 + (1 - 0) * r.nextDouble();
-            model.setA(a);
-            model.setB(b);
-            model.setC(c);
-            ArrayList<Double> runoffList = model.excute();
+            ABCv2 tmpModel = new ABCv2(0, this.model.envData, false,false, a,b,c);
+            ArrayList<Double> runoffList = tmpModel.excute();
 
             double corr = correlation(runoffList, calibData.calibList);
             bestMap.put(i, corr);
-            this.modelList.add(model);
+            this.modelList.add(tmpModel);
         }
+        Map<Integer, Double> bestPick = this.pickBestCorr();
+
+        double nse = 0;
+        ABCv2 bestModell = null;
+        for(int modelNr : bestPick.keySet()){
+
+            double newNse = this.nashSutcliffEff(this.modelList.get(modelNr));
+            if (newNse > nse){
+                nse = newNse;
+                bestModell = this.modelList.get(modelNr);
+            }
+        }
+        this.setModel(bestModell);
     }
 
-    public double getA() {
-        return this.model.getA();
-    }
-
-    public double getB() {
-        return this.model.getB();
-    }
-
-    public double getC() {
-        return this.model.getC();
+    public Map<Integer, Double> pickBestCorr(){
+        Map.Entry<Integer, Double> maxEntry = null;
+        for (Map.Entry<Integer,Double> entry : this.bestMap.entrySet()) {
+            if (maxEntry == null || entry.getValue().compareTo(maxEntry.getValue()) > 0)
+            {
+                maxEntry = entry;
+            }
+        }
+       final Map.Entry<Integer, Double> max = maxEntry;
+       return this.bestMap.entrySet().stream().
+               filter(entry -> entry.getValue() > max.getValue() -(max.getValue()*0.05)).
+               collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
     public static double correlation(ArrayList<Double> xs, ArrayList<Double> ys) {
-        //TODO: check here that arrays are not null, of the same length etc
         if(xs.size() > ys.size()){
             xs =new ArrayList<Double>(xs.subList(0, ys.size()));
         }
@@ -88,5 +105,37 @@ public class Calibrator {
 
         // correlation is just a normalized covariation
         return cov / sigmax / sigmay;
+    }
+
+    public double nashSutcliffEff(ABCv2 bestPicks){
+        OptionalDouble mesMean =  calibData.calibList.stream().
+                mapToDouble(a -> a).average();
+        double mAll = 0;
+        for(double m: calibData.calibList){
+            mAll =+ Math.pow((mesMean.getAsDouble() - m),2);
+        }
+        double simAll = 0;
+        for(int index = 0; index < calibData.calibList.size(); index++){
+            simAll =+ Math.pow(bestPicks.runOffList.get(index) - calibData.calibList.get(index), 2);
+        }
+        double nse = 1 - (simAll/mAll);
+        return nse;
+    }
+
+
+    public double getA() {
+        return this.model.getA();
+    }
+
+    public double getB() {
+        return this.model.getB();
+    }
+
+    public double getC() {
+        return this.model.getC();
+    }
+
+    public void setModel(ABCv2 model) {
+        this.model = model;
     }
 }
