@@ -62,6 +62,7 @@ public class Calibrator {
         bestModell.setCalibFit("NSE", nse);
         bestModell.setCalibFit("cor", cor);
         this.setModel(bestModell);
+        pb.close();
 
     }
 
@@ -77,7 +78,7 @@ public class Calibrator {
         }
        final Map.Entry<Integer, Double> max = maxEntry;
        return this.bestMap.entrySet().stream().
-               filter(entry -> entry.getValue() > max.getValue() -(max.getValue()*0.05)).
+               filter(entry -> entry.getValue() > max.getValue() -(max.getValue()*0.15)).
                collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
@@ -121,7 +122,7 @@ public class Calibrator {
                 mapToDouble(a -> a).average();
         double mAll = 0;
         for(double m: calibData.calibList){
-            mAll =+ Math.pow((mesMean.getAsDouble() - m),2);
+            mAll =+ Math.pow((m - mesMean.getAsDouble()),2);
         }
         double simAll = 0;
         for(int index = 0; index < calibData.calibList.size(); index++){

@@ -7,14 +7,24 @@ public class SoilWaterStore extends Store implements ProcessObserver{
      */
     private  double inputwater;
 
-    public SoilWaterStore(double inputWater, double oldStore){
+    public double b;
+
+    public SoilWaterStore(double inputWater, double oldStore, double inB){
         super(inputWater,oldStore); // oldstore, water which is allreay stored in this layer, what is inital?
         this.inputwater = inputWater;
+        this.b = inB;
+        this.runnOff = this.waterStore * this.b;
     }
+
+    public double getRunnOff(){
+        return this.runnOff;
+    }
+
+
     @Override
     public void update(double waterStore){  // update on Evapo and infil
-        this.outWater = this.inputwater - waterStore;
-        this.setWaterStore(waterStore);
+        this.waterStore = waterStore;
+        this.runnOff = this.waterStore * this.b;
 
     }
 

@@ -2,26 +2,27 @@ package ekrueger.Storage;
 
 public class BaseStore extends Store implements ProcessObserver {
 
+    public double c;
+
+    public BaseStore(double inputWater, double oldStore, double inC){
+        super(inputWater,oldStore);
+        this.c = inC;
+
+    }
+
+    public double getRunnOff(){
+        return this.runnOff;
+    }
+
+
     @Override
     public void update(double waterStore) {
-        this.setWaterStore(waterStore);
-        this.inWater = this.waterStore;
+        this.waterStore = waterStore;
+        this.runnOff = this.waterStore * this.c;
+
 
     }
 
-    public BaseStore(double inputWater, double oldStore){
-        super(inputWater,oldStore);
-    }
-
-    @Override
-    public void setInWater(double inWater) {
-        super.setInWater(inWater);
-    }
-
-    @Override
-    public void setWaterStore(double waterStore) {
-        super.setWaterStore(waterStore);
-    }
 
     @Override
     void setOutWater() {

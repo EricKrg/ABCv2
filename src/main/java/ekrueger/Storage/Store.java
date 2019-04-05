@@ -7,6 +7,7 @@ base construction of a store, specific functions are implemented in the specific
  */
 
 public abstract class Store {
+    public double runnOff;
     public double inWater; // input
     public double outWater; // abfluss
     public double waterStore;  // state

@@ -1,21 +1,37 @@
 package ekrueger.Process;
 
-import ekrueger.Storage.BaseStore;
-import ekrueger.Storage.DepStore;
-import ekrueger.Storage.SoilWaterStore;
-import ekrueger.Storage.Store;
+import ekrueger.Storage.*;
 
-public class RunOff {
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+public class RunOff implements ProcessSubjects {
     public SoilWaterStore soilWaterStore;
     public BaseStore baseStore;
     public DepStore depStore;
+    private ProcessObserver genericStore;
     public double runOff;
+    private ArrayList<ProcessObserver> obsList;
 
     public RunOff(double a, double b, double c, DepStore inDeptStore, SoilWaterStore inSoil, BaseStore inBase){
         this.baseStore = inBase;
         this.soilWaterStore = inSoil;
         this.depStore = inDeptStore;
+        this.obsList = new ArrayList(Arrays.asList(this.baseStore, this.soilWaterStore, this.depStore));
         this.runOff = a * this.depStore.getWaterStore() + b * this.soilWaterStore.getWaterStore() + c * this.baseStore.getWaterStore();
+        for(ProcessObserver obs : this.obsList){
+            double store = 0;
+            try {
+                String methodName = "getRunnOff";
+                Method invokeRunnOff = obs.getClass().getMethod(methodName);
+                store = (double) invokeRunnOff.invoke(obs); // pass arg
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            this.genericStore = obs;
+            this.updateObs(store);
+        }
     }
 
     public double getTotalRunOff() {
@@ -32,10 +48,20 @@ public class RunOff {
         return 0.0;
 
     }
+    @Override
+    public void deleteObs(ProcessObserver pObserver) {
 
-    public double getSpecificRunoff(Store inStore){
-        return inStore.waterStore;
     }
+    @Override
+    public void registerObs(ProcessObserver pObserver) {
+
+    }
+    @Override
+    public void updateObs(double store) {
+        this.genericStore.update(store);
+
+    }
+
 
     @Override
     public String toString() {
@@ -46,4 +72,5 @@ public class RunOff {
                 ", total runOff: " + runOff +
                 '}';
     }
+
 }

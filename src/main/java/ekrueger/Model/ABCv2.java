@@ -61,13 +61,21 @@ public class ABCv2 {
         double init = storeInit;
         int i = 0;
         ArrayList<Double> runOff = new ArrayList<>();
+
+        SoilWaterStore oldSoil = null;
+        BaseStore oldBase = null;
+        DepStore oldDep = null;
+
         for(EnvCon env:  this.envData){
             if(env.getPrecip() > 0) {
+                double inDep = (oldDep == null) ? 0 + env.getPrecip() : env.getPrecip() +(oldDep.waterStore - oldDep.runnOff);
+                double inSoil = (oldSoil == null) ? 0 : oldSoil.waterStore -oldSoil.runnOff;
+                double inBase = (oldBase == null) ? 0 : oldBase.waterStore - oldBase.runnOff;
                 // DEPT WATERSTORE
-                DepStore depStore = new DepStore(env.getPrecip(), init, a);  // depstore gives 50% of the percip to the soilwaterstore
+                DepStore depStore = new DepStore(inDep, init, a);  // depstore gives the percip to the soilwaterstore
                 // SOIL WATERSTORE
-                SoilWaterStore soilWaterStore = new SoilWaterStore(depStore.getOutWater(), init);
-                BaseStore baseStore = new BaseStore(0, 0); // empty, is filled with the first infiltration event
+                SoilWaterStore soilWaterStore = new SoilWaterStore(inSoil + depStore.getOutWater(), init, b);
+                BaseStore baseStore = new BaseStore(inBase, 0, c ); // empty, is filled with the first infiltration event
                 // PROCESS EVAPORATION
                 Evaporation evaporation = new Evaporation(soilWaterStore, env);
                 evaporation.evaporate();
@@ -76,7 +84,6 @@ public class ABCv2 {
                 infiltration.recharge();
                 //RunOff
                 RunOff tempRunoff = new RunOff(a, b, c, depStore, soilWaterStore, baseStore);
-
                 runOff.add(tempRunoff.runOff);
 
                 if (isVerbose()) {
@@ -88,26 +95,32 @@ public class ABCv2 {
                     logger.log(runOff);
                     *
                      */
-                    logger.logABCv2(this, tempRunoff, evaporation, i);
-                }
-                if (isTextOut()) {
-                    logger.writeLogFile(init);
-                    logger.writeLogFile(evaporation);
-                    logger.writeLogFile(infiltration);
-                    logger.writeLogFile(soilWaterStore);
-                    logger.writeLogFile(runOff);
+                    logger.logABCv2(this, tempRunoff, evaporation, i, isTextOut());
                 }
 
                 //init = soilWaterStore.waterStore; // reset oldstore with new store value
                 logger.save();
+                oldSoil = soilWaterStore;
+                oldBase = baseStore;
+                oldDep = depStore;
             } else {
-                runOff.add(0d);
+                runOff.add(0d); // not final
             }
             i++;
 
         }
+        if(isTextOut()){
+            try {
+                logger.writer.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
         this.runOffList = runOff;
         return runOff;
+
+
     }
 
     public void setCalibFit(String measure, double value){
