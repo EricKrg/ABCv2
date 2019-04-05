@@ -45,7 +45,7 @@ public class Evaporation implements ProcessSubjects{
     }
 
     public void evaporate(){ // execute evapo process and inform observer
-        this.waterStore = this.waterStore - this.potEvapo; //
+        this.waterStore = (this.potEvapo > this.waterStore) ? 0 : this.waterStore - this.potEvapo; //
         updateObs(this.waterStore);
     }
 

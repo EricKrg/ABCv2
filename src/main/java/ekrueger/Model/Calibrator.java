@@ -44,7 +44,19 @@ public class Calibrator {
             bestMap.put(i, corr);
             this.modelList.add(tmpModel);
         }
-        Map<Integer, Double> bestPick = this.pickBestCorr();
+        ABCv2 bestModell = null;
+        double accept = 0.1;
+        while (bestModell == null){
+            bestModell = this.getBestModel(accept);
+            accept = accept + 0.1;
+        }
+        this.setModel(bestModell);
+        pb.close();
+
+    }
+
+    public ABCv2 getBestModel(double accept){
+        Map<Integer, Double> bestPick = this.pickBestCorr(accept);
 
         double cor = 0;
         double nse = 0;
@@ -58,15 +70,14 @@ public class Calibrator {
                 cor = bestPick.get(modelNr);
             }
         }
-
+        if (bestModell == null){ return  null; }
         bestModell.setCalibFit("NSE", nse);
         bestModell.setCalibFit("cor", cor);
-        this.setModel(bestModell);
-        pb.close();
-
+        return bestModell;
     }
 
-    public Map<Integer, Double> pickBestCorr(){
+
+    public Map<Integer, Double> pickBestCorr(double corRel){
         Map.Entry<Integer, Double> maxEntry = null;
         for (Map.Entry<Integer,Double> entry : this.bestMap.entrySet()) {
             if(entry.getValue().isNaN()){
@@ -78,7 +89,7 @@ public class Calibrator {
         }
        final Map.Entry<Integer, Double> max = maxEntry;
        return this.bestMap.entrySet().stream().
-               filter(entry -> entry.getValue() > max.getValue() -(max.getValue()*0.15)).
+               filter(entry -> entry.getValue() > max.getValue() -(max.getValue()*corRel)).
                collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 

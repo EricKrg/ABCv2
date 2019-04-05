@@ -28,7 +28,7 @@ public class Infiltration implements ProcessSubjects {
     }
 
     public void recharge(){ // calc recharge and update observing stores
-        this.recharge = this.c * (this.soilObs.getWaterStore() - this.potEvapo);
+        this.recharge = (this.potEvapo > this.soilObs.getWaterStore()) ? 0: this.c * (this.soilObs.getWaterStore() - this.potEvapo);
         this.updateObs(this.recharge);
     }
 

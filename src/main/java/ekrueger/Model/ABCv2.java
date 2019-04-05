@@ -67,45 +67,35 @@ public class ABCv2 {
         DepStore oldDep = null;
 
         for(EnvCon env:  this.envData){
-            if(env.getPrecip() > 0) {
-                double inDep = (oldDep == null) ? 0 + env.getPrecip() : env.getPrecip() +(oldDep.waterStore - oldDep.runnOff);
-                double inSoil = (oldSoil == null) ? 0 : oldSoil.waterStore -oldSoil.runnOff;
-                double inBase = (oldBase == null) ? 0 : oldBase.waterStore - oldBase.runnOff;
-                // DEPT WATERSTORE
-                DepStore depStore = new DepStore(inDep, init, a);  // depstore gives the percip to the soilwaterstore
-                // SOIL WATERSTORE
-                SoilWaterStore soilWaterStore = new SoilWaterStore(inSoil + depStore.getOutWater(), init, b);
-                BaseStore baseStore = new BaseStore(inBase, 0, c ); // empty, is filled with the first infiltration event
-                // PROCESS EVAPORATION
-                Evaporation evaporation = new Evaporation(soilWaterStore, env);
-                evaporation.evaporate();
-                // PROCESS INFILTRATION
-                Infiltration infiltration = new Infiltration(soilWaterStore, baseStore, c, evaporation.getPotEvapo());
-                infiltration.recharge();
-                //RunOff
-                RunOff tempRunoff = new RunOff(a, b, c, depStore, soilWaterStore, baseStore);
-                runOff.add(tempRunoff.runOff);
 
-                if (isVerbose()) {
-                    /*
-                    logger.log(init);
-                    logger.log(evaporation);
-                    logger.log(infiltration);
-                    logger.log(soilWaterStore);
-                    logger.log(runOff);
-                    *
-                     */
-                    logger.logABCv2(this, tempRunoff, evaporation, i, isTextOut());
-                }
+            double inDep = (oldDep == null) ? 0 + env.getPrecip() : env.getPrecip() +(oldDep.waterStore - oldDep.runnOff);
+            double inSoil = (oldSoil == null) ? 0 : oldSoil.waterStore -oldSoil.runnOff;
+            double inBase = (oldBase == null) ? 0 : oldBase.waterStore - oldBase.runnOff;
+            // DEPT WATERSTORE
+            DepStore depStore = new DepStore(inDep, init, a);  // depstore gives the percip to the soilwaterstore
+            // SOIL WATERSTORE
+            SoilWaterStore soilWaterStore = new SoilWaterStore(inSoil + depStore.getOutWater(), init, b);
+            BaseStore baseStore = new BaseStore(inBase, 0, c ); // empty, is filled with the first infiltration event
+            // PROCESS EVAPORATION
+            Evaporation evaporation = new Evaporation(soilWaterStore, env);
+            evaporation.evaporate();
+            // PROCESS INFILTRATION
+            Infiltration infiltration = new Infiltration(soilWaterStore, baseStore, c, evaporation.getPotEvapo());
+            infiltration.recharge();
+            //RunOff
+            RunOff tempRunoff = new RunOff(a, b, c, depStore, soilWaterStore, baseStore);
+            runOff.add(tempRunoff.runOff);
 
-                //init = soilWaterStore.waterStore; // reset oldstore with new store value
-                logger.save();
-                oldSoil = soilWaterStore;
-                oldBase = baseStore;
-                oldDep = depStore;
-            } else {
-                runOff.add(0d); // not final
+            if (isVerbose()) {
+                logger.logABCv2(this, tempRunoff, evaporation, i, isTextOut());
             }
+
+            //init = soilWaterStore.waterStore; // reset oldstore with new store value
+            logger.save();
+            oldSoil = soilWaterStore;
+            oldBase = baseStore;
+            oldDep = depStore;
+
             i++;
 
         }
