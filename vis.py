@@ -4,7 +4,7 @@ import os
 import plotly.graph_objs as go
 from plotly.offline import plot
 
-inData = sys.argv[1]
+inData = 'logs/newLog.txt' #sys.argv[1]
 time, percip, sim,real = ([] for i in range(4))
 with open(inData) as csv_file:
     reader = csv.reader(csv_file, delimiter='\t')
