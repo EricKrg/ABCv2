@@ -54,6 +54,7 @@ trace3 = go.Scatter(
 
 # annotation stuff
 # Source
+annotations = []
 annotations.append(dict(xref='paper', yref='paper', x=0.5, y=-0.1,
                               xanchor='center', yanchor='top',
                               text=err,
