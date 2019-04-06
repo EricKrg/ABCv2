@@ -69,6 +69,7 @@ layout = dict(title = '<b>Simulierter und gemessener Abfluss</b>'.format(os.path
               xaxis = dict(title = '<b>Zeit</b>'),
               yaxis = dict(title = '<b>Abfluss(mm/s) /Niederschlag(mm)</b>'),
               )
+layout['annotations'] = annotations
 data = [trace3,trace,trace2]
 
 fig = dict(data=data, layout=layout)
