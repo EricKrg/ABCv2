@@ -54,22 +54,12 @@ trace3 = go.Scatter(
 
 # annotation stuff
 # Source
-annotations = []
-annotations.append(dict(xref='paper', yref='paper', x=0.5, y=-0.1,
-                              xanchor='center', yanchor='top',
-                              text=err,
-                              font=dict(family='Arial',
-                                        size=12,
-                                        color='rgb(150,150,150)'),
-                              showarrow=False))
-
 
 # layout stuff
-layout = dict(title = '<b>Simulierter und gemessener Abfluss</b>'.format(os.path.basename(inData)),
+layout = dict(title = '<b>Simulierter und gemessener Abfluss {}</b><br>{}'.format(os.path.basename(inData),err),
               xaxis = dict(title = '<b>Zeit</b>'),
               yaxis = dict(title = '<b>Abfluss(mm/s) /Niederschlag(mm)</b>'),
               )
-layout['annotations'] = annotations
 data = [trace3,trace,trace2]
 
 fig = dict(data=data, layout=layout)
