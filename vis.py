@@ -13,7 +13,7 @@ with open(inData) as csv_file:
         if line == 0:
             line=+1
         else:
-            print(row)
+            #print(row)
             try:
                 time.append(row[0])
                 percip.append(row[1])
@@ -61,6 +61,6 @@ data = [trace3,trace,trace2]
 
 fig = dict(data=data, layout=layout)
 
-plot(fig, filename='final.html')
+plot(fig, filename='index.html')
 
 
