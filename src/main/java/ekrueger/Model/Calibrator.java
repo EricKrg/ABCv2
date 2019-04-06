@@ -1,6 +1,7 @@
 package ekrueger.Model;
 
 import ekrueger.DataReader;
+import ekrueger.Logger;
 import me.tongfei.progressbar.ProgressBar;
 
 import java.util.*;
@@ -27,11 +28,13 @@ public class Calibrator {
     }
 
     private void calibrate(){
-        ProgressBar pb = new ProgressBar("Calibrate",this.iterator.length);
+        //ProgressBar pb = new ProgressBar("Calibrate",this.iterator.length);
 
         this.bestMap = new HashMap<Integer, Double>();
         for(int i = 0; i < this.iterator.length; i++){
-            pb.step();
+            //pb.step();
+            Logger logger = new Logger(i);
+            logger.progressPercentage(i, this.iterator.length, "calibrate");
             ArrayList <Double> resList = new ArrayList<Double>();
             Random r = new Random();
             double a = 0 + (1 - 0) * r.nextDouble();
@@ -51,7 +54,7 @@ public class Calibrator {
             accept = accept + 0.1;
         }
         this.setModel(bestModell);
-        pb.close();
+
 
     }
 
@@ -159,4 +162,5 @@ public class Calibrator {
     public void setModel(ABCv2 model) {
         this.model = model;
     }
+
 }

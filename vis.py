@@ -20,6 +20,7 @@ with open(inData) as csv_file:
                 sim.append(row[2])
                 real.append(row[3])
             except IndexError:
+                err = row[0]
                 print("end")
 # create data traces
 # sim
@@ -50,6 +51,16 @@ trace3 = go.Scatter(
         dash = 'dot'),
     name = 'Niederschlag'
 )
+
+# annotation stuff
+# Source
+annotations.append(dict(xref='paper', yref='paper', x=0.5, y=-0.1,
+                              xanchor='center', yanchor='top',
+                              text=err,
+                              font=dict(family='Arial',
+                                        size=12,
+                                        color='rgb(150,150,150)'),
+                              showarrow=False))
 
 
 # layout stuff

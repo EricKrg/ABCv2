@@ -87,7 +87,10 @@ public class ABCv2 {
             runOff.add(tempRunoff.runOff);
 
             if (isVerbose()) {
+                logger.progressPercentage(i,this.envData.size(), "simulate");
+                System.out.println("\n");
                 logger.logABCv2(this, tempRunoff, evaporation, i, isTextOut());
+                logger.clearScreen();
             }
 
             //init = soilWaterStore.waterStore; // reset oldstore with new store value
