@@ -20,7 +20,6 @@ public class App
                 0.9,0.4,0.6);
         Calibrator calibrator = new Calibrator(calibModel,calibData, 1000);
 
-
         ABCv2 myModel = new ABCv2(0, data.getEnvData(),true,true,
                 calibrator.getA(), calibrator.getB(), calibrator.getC(), calibData);
         myModel.calibFit = calibrator.model.calibFit;

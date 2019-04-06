@@ -43,7 +43,8 @@ public class Logger {
             DateFormat df = new SimpleDateFormat("HH:mm:ss_dd.MM.yyyy");
             Date date = new Date();
             String suffix =  df.format(date);
-            FileWriter fw = new FileWriter("./logs/"+ this.loggingFocus.getClass().getSimpleName() + "_"+ suffix + ".txt");
+            //FileWriter fw = new FileWriter("./logs/"+ this.loggingFocus.getClass().getSimpleName() + "_"+ suffix + ".txt");
+            FileWriter fw = new FileWriter("./logs/newLog.txt");
             this.writer = new BufferedWriter(fw);
             // header
             String header = "DATE" + "\t" + "PERCIP" +"\t"+ "SIM_runoff" +"\t" + "REAL_runoff" +"\t" + "BASESTORE " +"\t" + "POTEVO" +"\t";

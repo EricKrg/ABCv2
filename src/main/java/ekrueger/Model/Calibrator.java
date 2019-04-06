@@ -45,7 +45,7 @@ public class Calibrator {
             this.modelList.add(tmpModel);
         }
         ABCv2 bestModell = null;
-        double accept = 0.1;
+        double accept = 0.1;  // variance acceptance
         while (bestModell == null){
             bestModell = this.getBestModel(accept);
             accept = accept + 0.1;

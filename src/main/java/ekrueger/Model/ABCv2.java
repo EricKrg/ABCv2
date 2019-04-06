@@ -101,6 +101,7 @@ public class ABCv2 {
         }
         if(isTextOut()){
             try {
+                this.logger.writeLogFile(calibFit);
                 logger.writer.close();
             } catch (Exception e) {
                 e.printStackTrace();
