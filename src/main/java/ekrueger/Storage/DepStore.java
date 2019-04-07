@@ -25,8 +25,11 @@ public class DepStore extends Store implements ProcessObserver {
 
     @Override
     public void update(double waterStore) {
+        /**
+         * set new Waterstore and recalc. runOff
+         */
         this.setWaterStore(waterStore);
         this.inWater = this.waterStore;
-
+        this.runnOff = this.waterStore * this.a;
     }
 }

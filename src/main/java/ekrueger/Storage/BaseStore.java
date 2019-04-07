@@ -14,9 +14,11 @@ public class BaseStore extends Store implements ProcessObserver {
         return this.runnOff;
     }
 
-
     @Override
     public void update(double waterStore) {
+        /**
+         * set new Waterstore and recalc. runOff
+         */
         this.waterStore = waterStore;
         this.runnOff = this.waterStore * this.c;
 

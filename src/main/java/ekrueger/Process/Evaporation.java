@@ -4,8 +4,15 @@ import ekrueger.Model.EnvCon;
 import ekrueger.Storage.ProcessObserver;
 import ekrueger.Storage.SoilWaterStore;
 
-public class Evaporation implements ProcessSubjects{
+/**
+ * @author eric.krueger@uni-jena.de
+ */
 
+public class Evaporation implements ProcessSubjects{
+    /**
+     * this class is a process subject for the soilwaterstore, it calculates the potEvapo based on the waterstore
+     * of the soilStore, temp in degC and haude factor
+     */
     public double potEvapo;
     private double relHum14; // rel. humi at 14:00
     private double es;
@@ -45,7 +52,7 @@ public class Evaporation implements ProcessSubjects{
     }
 
     public void evaporate(){ // execute evapo process and inform observer
-        this.waterStore = (this.potEvapo > this.waterStore) ? 0 : this.waterStore - this.potEvapo; //
+        this.waterStore = (this.potEvapo > this.waterStore) ? 0 : this.waterStore - this.potEvapo; // prevent negative waterstores
         updateObs(this.waterStore);
     }
 
@@ -64,6 +71,9 @@ public class Evaporation implements ProcessSubjects{
     }
     @Override
     public void updateObs(double waterStore) {
+        /**
+         * update the corresponding Observer (Soilwaterstore) with the new waterstore
+         */
         this.soilObs.update(this.waterStore);
     }
     // to string

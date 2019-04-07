@@ -20,34 +20,24 @@ public class RunOff implements ProcessSubjects {
         this.depStore = inDeptStore;
         this.obsList = new ArrayList(Arrays.asList(this.baseStore, this.soilWaterStore, this.depStore));
         this.runOff = a * this.depStore.getWaterStore() + b * this.soilWaterStore.getWaterStore() + c * this.baseStore.getWaterStore();
-        for(ProcessObserver obs : this.obsList){
-            double store = 0;
+        for(ProcessObserver obs : this.obsList){ // calculate storage after runnoff and inform storage classes, with fancy invoking
+            double run = 0;
             try {
-                String methodName = "getRunnOff";
-                Method invokeRunnOff = obs.getClass().getMethod(methodName);
-                store = (double) invokeRunnOff.invoke(obs); // pass arg
+                String getRun = "getRunnOff";
+                Method invokeRunnOff = obs.getClass().getMethod(getRun);
+                run = (double) invokeRunnOff.invoke(obs); // pass arg
             } catch (Exception e) {
                 e.printStackTrace();
             }
             this.genericStore = obs;
-            this.updateObs(store);
+            this.updateObs(run);
         }
     }
 
     public double getTotalRunOff() {
         return runOff;
     }
-    /*
-    todo:
-        - a * deptstor + b * soilstore + c * basestore
-        - deptstore?
-        - a,b,c???
-     */
 
-    public  double getSimRunOff(){
-        return 0.0;
-
-    }
     @Override
     public void deleteObs(ProcessObserver pObserver) {
 

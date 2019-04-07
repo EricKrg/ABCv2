@@ -18,8 +18,8 @@ public class Logger {
     public BufferedWriter writer = null;
 
     // generic logger
-    /*
-    the generic log takes an obj. prints its class name and the toString method, was used for debbuging
+    /**
+     * the generic log takes an obj. prints its class name and the toString method, was used for debbuging
      */
     public  Logger(Object logFocus){
         this.loggingFocus = logFocus;
@@ -38,14 +38,19 @@ public class Logger {
     public void save(){
         this.history =this;
     }
-    public void toLogFile(){
+    public void toLogFile(boolean replaceOld){
         try{
             DateFormat df = new SimpleDateFormat("HH:mm:ss_dd.MM.yyyy");
             Date date = new Date();
             String suffix =  df.format(date);
-            //FileWriter fw = new FileWriter("./logs/"+ this.loggingFocus.getClass().getSimpleName() + "_"+ suffix + ".txt");
-            FileWriter fw = new FileWriter("./logs/newLog.txt");
-            this.writer = new BufferedWriter(fw);
+
+            FileWriter fw;
+            if(replaceOld){
+                fw = new FileWriter("./logs/newLog.txt");
+            } else {
+                fw = new FileWriter("./logs/"+ this.loggingFocus.getClass().getSimpleName() + "_"+ suffix + ".txt");
+            }
+            this.writer = new BufferedWriter(fw);  // with replaceOld == true it is easier to visualize the log with the python script
             // header
             String header = "DATE" + "\t" + "PERCIP" +"\t"+ "SIM_runoff" +"\t" + "REAL_runoff" +"\t" + "BASESTORE " +"\t" + "POTEVO" +"\t";
             this.writer.write(header);
@@ -80,15 +85,17 @@ public class Logger {
             String real = "no data";
             line = time + "\t" + percip + "\t"+ sim  + "\t" + real + "\t" + base + "\t" + epot;
         } finally {
-            System.out.println(line);
+            if(textout.length > 0 && textout[1]) {
+                System.out.println(line);
+            }
             if(textout.length > 0 && textout[0]){
                 this.writeLogFile(line);
             }
         }
     }
-
+    // helper functions, which dont function really good
     public static void clearScreen() {
-        System.out.print("\033[H\033[2J");
+        System.out.print("\033[H\033[2J"); // this wont work because of the cross-plattform shenanigans
         System.out.flush();
     }
 

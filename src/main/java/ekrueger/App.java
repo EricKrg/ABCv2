@@ -3,8 +3,6 @@ package ekrueger;
 import ekrueger.Model.ABCv2;
 import ekrueger.Model.Calibrator;
 
-import java.util.Map;
-
 /**
  *  main tester
  *
@@ -23,7 +21,7 @@ public class App
         ABCv2 myModel = new ABCv2(0, data.getEnvData(),true,true,
                 calibrator.getA(), calibrator.getB(), calibrator.getC(), calibData);
         myModel.calibFit = calibrator.model.calibFit;
-        myModel.excute();
+        myModel.execute();
 
 
 

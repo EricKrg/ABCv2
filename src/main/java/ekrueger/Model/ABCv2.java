@@ -14,15 +14,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/*
-todo:
-    - logger
-    - what if there is no percip ??
-
+/**
+ * @author eric.krueger@uni-jena.de
  */
 
-public class ABCv2 {
 
+public class ABCv2 {
+    /**
+     * this class represents the the ABC version 2 Runoff model, the class defines how the Storage classes are combined
+     * and which process classes should be called, all processes are process-subjects to the available Stores in the model
+     * thus process classes can be added and removed without breaking model
+     */
     private static double storeInit;
     private static boolean verbose;
     private static boolean textOut;
@@ -45,19 +47,15 @@ public class ABCv2 {
         if (inCalibData.length > 0) {
             this.calibData = inCalibData[0];
         }
-        //
         textOut = inTextOut;
         verbose = inVerbose;
-
         this.logger = new Logger(this);
 
         if(isTextOut()){
-            logger.toLogFile();
+            logger.toLogFile(true);
         }
-
     }
-
-    public ArrayList<Double> excute(){
+    public ArrayList<Double> execute(){
         double init = storeInit;
         int i = 0;
         ArrayList<Double> runOff = new ArrayList<>();
@@ -67,7 +65,6 @@ public class ABCv2 {
         DepStore oldDep = null;
 
         for(EnvCon env:  this.envData){
-
             double inDep = (oldDep == null) ? 0 + env.getPrecip() : env.getPrecip() +(oldDep.waterStore - oldDep.runnOff);
             double inSoil = (oldSoil == null) ? 0 : oldSoil.waterStore -oldSoil.runnOff;
             double inBase = (oldBase == null) ? 0 : oldBase.waterStore - oldBase.runnOff;
@@ -86,19 +83,16 @@ public class ABCv2 {
             RunOff tempRunoff = new RunOff(a, b, c, depStore, soilWaterStore, baseStore);
             runOff.add(tempRunoff.runOff);
 
-            if (isVerbose()) {
-                logger.progressPercentage(i,this.envData.size(), "simulate");
-                System.out.println("\n");
-                logger.logABCv2(this, tempRunoff, evaporation, i, isTextOut());
-                logger.clearScreen();
-            }
-
-            //init = soilWaterStore.waterStore; // reset oldstore with new store value
+            // logging stuff
+            //logger.progressPercentage(i,this.envData.size(), "simulate");
+            logger.logABCv2(this, tempRunoff, evaporation, i, isTextOut(), isVerbose());
+            logger.clearScreen(); // somehow this wont work with ansii consoles i dont know why
             logger.save();
+
+            // old Storage for the next iteration
             oldSoil = soilWaterStore;
             oldBase = baseStore;
             oldDep = depStore;
-
             i++;
 
         }
@@ -113,8 +107,6 @@ public class ABCv2 {
 
         this.runOffList = runOff;
         return runOff;
-
-
     }
 
     public void setCalibFit(String measure, double value){
@@ -122,8 +114,6 @@ public class ABCv2 {
     }
 
     // generated getter setter
-
-
     public Map<String, Double> getCalibFit() {
         return calibFit;
     }

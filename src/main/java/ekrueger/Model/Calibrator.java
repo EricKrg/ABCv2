@@ -2,10 +2,13 @@ package ekrueger.Model;
 
 import ekrueger.DataReader;
 import ekrueger.Logger;
-import me.tongfei.progressbar.ProgressBar;
 
 import java.util.*;
 import java.util.stream.Collectors;
+
+/**
+ * @author eric.krueger@uni-jena.de
+ */
 
 public class Calibrator {
 
@@ -28,11 +31,15 @@ public class Calibrator {
     }
 
     private void calibrate(){
-        //ProgressBar pb = new ProgressBar("Calibrate",this.iterator.length);
-
+        /**
+         * generates random values for a,b,c and executes the model with those parameters
+         * in the first step the correlation between the model and the calibration data is calculated
+         * then the top-n (depends on acceptance) models are used the calculate the nse, the model with the max
+         * nse is choosen as model for all further steps
+         */
+        System.out.println("calibrate ...");
         this.bestMap = new HashMap<Integer, Double>();
         for(int i = 0; i < this.iterator.length; i++){
-            //pb.step();
             Logger logger = new Logger(i);
             logger.progressPercentage(i, this.iterator.length, "calibrate");
             ArrayList <Double> resList = new ArrayList<Double>();
@@ -41,24 +48,26 @@ public class Calibrator {
             double b = 0 + (1 - 0) * r.nextDouble();
             double c = 0 + (1 - 0) * r.nextDouble();
             ABCv2 tmpModel = new ABCv2(0, this.model.envData, false,false, a,b,c);
-            ArrayList<Double> runoffList = tmpModel.excute();
+            ArrayList<Double> runoffList = tmpModel.execute();
 
             double corr = correlation(runoffList, calibData.calibList);
             bestMap.put(i, corr);
             this.modelList.add(tmpModel);
         }
         ABCv2 bestModell = null;
-        double accept = 0.1;  // variance acceptance
+        double accept = 0.1;  // variance acceptance, acceptance is weakened if there is no model with a satisfing nse
         while (bestModell == null){
             bestModell = this.getBestModel(accept);
             accept = accept + 0.1;
         }
         this.setModel(bestModell);
-
-
     }
 
     public ABCv2 getBestModel(double accept){
+        /**
+         * picks the best model with the highest nse, if there is no model with a nse over 0 it returns null,
+         * this function is then called again with a higher accept value
+         */
         Map<Integer, Double> bestPick = this.pickBestCorr(accept);
 
         double cor = 0;
@@ -97,9 +106,12 @@ public class Calibrator {
     }
 
     public static double correlation(ArrayList<Double> xs, ArrayList<Double> ys) {
-        if(xs.size() > ys.size()){
-            xs =new ArrayList<Double>(xs.subList(0, ys.size()));
-        }
+        /**
+         * simple correlation between two arrays,
+         */
+        xs =(xs.size() > ys.size()) ? new ArrayList<Double>(xs.subList(0, ys.size())) : xs;
+        ys =(ys.size() > xs.size()) ? new ArrayList<Double>(ys.subList(0, xs.size())) : ys;
+
         double sx = 0.0;
         double sy = 0.0;
         double sxx = 0.0;
@@ -118,7 +130,6 @@ public class Calibrator {
             syy += y * y;
             sxy += x * y;
         }
-
         // covariation
         double cov = sxy / n - sx * sy / n / n;
         // standard error of x
@@ -136,7 +147,7 @@ public class Calibrator {
                 mapToDouble(a -> a).average();
         double mAll = 0;
         for(double m: calibData.calibList){
-            mAll =+ Math.pow((m - mesMean.getAsDouble()),2);
+            mAll =+ Math.pow(m-mesMean.getAsDouble(),2);
         }
         double simAll = 0;
         for(int index = 0; index < calibData.calibList.size(); index++){
@@ -146,7 +157,7 @@ public class Calibrator {
         return nse;
     }
 
-
+    // generated getter and setter
     public double getA() {
         return this.model.getA();
     }

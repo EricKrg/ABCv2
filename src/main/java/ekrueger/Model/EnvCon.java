@@ -7,8 +7,10 @@ import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
-/*
-the data from the data reader is put in this class
+/**
+ * @author eric.krueger@uni-jena.de
+ * the data from the data reader is put in this class
+ * having an actual data-structure for the environment data makes it alot easier to access in die model calculations
  */
 
 public class EnvCon {
@@ -20,7 +22,7 @@ public class EnvCon {
     public double sunHours;
     public double relHum;
     public double absHum;
-    public static final Map<Integer, Float>  haudePineMap = new HashMap<Integer,Float>() {{
+    public static final Map<Integer, Float>  haudePineMap = new HashMap<Integer,Float>() {{  // naive version of getting the haude factor, better would be some sort of locator
         put(0,0.08f);
         put(1,0.04f);
         put(2,0.14f);
@@ -46,8 +48,6 @@ public class EnvCon {
             return null;
         }
     }
-
-
 
     public EnvCon(double inPrecip, double inMinTemp, double inMeanTemp, double inMaxTemp,
                   double inSunHours, double inRelHum, double inAbsHum, String date){
