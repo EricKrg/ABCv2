@@ -19,7 +19,6 @@ import java.util.Date;
 
 public class Logger {
     Object loggingFocus;
-    Logger history;
     public BufferedWriter writer = null;
 
     // generic logger
@@ -31,17 +30,9 @@ public class Logger {
         this.clearScreen();
     }
     public void log(Object someObjLog){
-        //System.out.println(someObjLog);
         System.out.println(someObjLog.getClass().getName());
         System.out.println(someObjLog);
         System.out.println("#-----------------------------------------------");
-    }
-    public void showHisto(Object histoObj){
-        System.out.println("Show histo of:  " + histoObj.getClass().getCanonicalName() );
-        //System.out.println(this.history.loggingFocus.histoObj.getClass().getCanonicalName());
-    }
-    public void save(){
-        this.history =this;
     }
     public void toLogFile(boolean replaceOld){
         try{

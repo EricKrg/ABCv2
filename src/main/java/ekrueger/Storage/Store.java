@@ -6,7 +6,8 @@ package ekrueger.Storage;
 
 public abstract class Store {
     /**
-     * base construction of a store, specific functions are implemented in the specific class
+     * base construction of a store, specific functions are implemented
+     * in the specific class
     */
     public double runnOff;
     public double inWater; // input

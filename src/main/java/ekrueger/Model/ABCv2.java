@@ -65,13 +65,13 @@ public class ABCv2 {
         DepStore oldDep = null;
 
         for(EnvCon env:  this.envData){
-            double inDep = (oldDep == null) ? 0 + env.getPrecip() : env.getPrecip() +(oldDep.waterStore - oldDep.runnOff);
-            double inSoil = (oldSoil == null) ? 0 : oldSoil.waterStore -oldSoil.runnOff;
-            double inBase = (oldBase == null) ? 0 : oldBase.waterStore - oldBase.runnOff;
+            double inDep = (oldDep == null) ? 0 + env.getPrecip() : env.getPrecip() +oldDep.waterStore;
+            double inSoil = (oldSoil == null) ? 0 : oldSoil.waterStore;
+            double inBase = (oldBase == null) ? 0 : oldBase.waterStore;
             // DEPT WATERSTORE
             DepStore depStore = new DepStore(inDep, init, a);  // depstore gives the percip to the soilwaterstore
             // SOIL WATERSTORE
-            SoilWaterStore soilWaterStore = new SoilWaterStore(inSoil + depStore.getOutWater(), init, b);
+            SoilWaterStore soilWaterStore = new SoilWaterStore((inSoil + depStore.getWaterStore()*0.5), init, b);
             BaseStore baseStore = new BaseStore(inBase, 0, c ); // empty, is filled with the first infiltration event
             // PROCESS EVAPORATION
             Evaporation evaporation = new Evaporation(soilWaterStore, env);
@@ -87,8 +87,6 @@ public class ABCv2 {
             //logger.progressPercentage(i,this.envData.size(), "simulate");
             logger.logABCv2(this, tempRunoff, evaporation, i, isTextOut(), isVerbose());
             logger.clearScreen(); // somehow this wont work with ansii consoles i dont know why
-            logger.save();
-
             // old Storage for the next iteration
             oldSoil = soilWaterStore;
             oldBase = baseStore;

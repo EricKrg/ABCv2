@@ -5,8 +5,8 @@ package ekrueger.Storage;
  */
 
 public class DepStore extends Store implements ProcessObserver {
-    /*
-    simple depository store
+    /**
+     * simple depression store class
      */
     double a;
     public DepStore(double inputWater, double oldStore, double inA){
@@ -22,7 +22,7 @@ public class DepStore extends Store implements ProcessObserver {
 
     @Override
     public void setOutWater(){
-        this.outWater = this.inWater * this.a; //  recharges to soil
+        this.outWater = this.runnOff; //  recharges to soil
         this.waterStore = this.waterStore - this.outWater;
 
     }

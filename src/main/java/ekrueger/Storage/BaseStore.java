@@ -26,11 +26,7 @@ public class BaseStore extends Store implements ProcessObserver {
          */
         this.waterStore = waterStore;
         this.runnOff = this.waterStore * this.c;
-
-
     }
-
-
     @Override
     void setOutWater() {
 
