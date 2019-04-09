@@ -1,5 +1,10 @@
 package ekrueger.Storage;
 
+/**
+ * @author eric.krueger@uni-jena.de
+ */
+
+
 public class BaseStore extends Store implements ProcessObserver {
 
     public double c;

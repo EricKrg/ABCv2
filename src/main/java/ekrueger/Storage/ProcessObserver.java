@@ -1,9 +1,7 @@
 package ekrueger.Storage;
 
-import ekrueger.Model.EnvCon;
-
-/*
-(water) stores are observers to processes
+/**
+ * @author eric.krueger@uni-jena.de
  */
 
 public interface ProcessObserver {

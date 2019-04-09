@@ -4,11 +4,15 @@ import os
 import plotly.graph_objs as go
 from plotly.offline import plot
 
-inData = 'logs/newLog.txt' #sys.argv[1]
+# simply visual. script for the final logfile using plotly to create a html
+
+inData = sys.argv[1] if len(sys.argv) > 1 else  'logs/newLog.txt'
+print(inData)
 time, percip, sim,real = ([] for i in range(4))
 with open(inData) as csv_file:
     reader = csv.reader(csv_file, delimiter='\t')
     line = 0
+    err = ""
     for row in reader:
         if line == 0:
             line=+1

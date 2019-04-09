@@ -1,5 +1,10 @@
 package ekrueger;
 
+/**
+ * @author eric.krueger@uni-jena.de
+ *
+ */
+
 import ekrueger.Model.EnvCon;
 
 import java.io.BufferedReader;
@@ -9,9 +14,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-/*
-main purpose of this dataReader is to create a list of Environment data from a given text file
-this list is used as input for the climate model.
+/**
+ * main purpose of this dataReader is to create a list of Environment data from a given text file
+ * this list is used as input for the climate model.
  */
 
 public class DataReader {

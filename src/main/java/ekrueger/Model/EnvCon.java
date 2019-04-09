@@ -10,7 +10,8 @@ import java.util.Map;
 /**
  * @author eric.krueger@uni-jena.de
  * the data from the data reader is put in this class
- * having an actual data-structure for the environment data makes it alot easier to access in die model calculations
+ * having an actual data-structure for the environment data makes it alot easier to access in
+ * the model calculations
  */
 
 public class EnvCon {

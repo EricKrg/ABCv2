@@ -12,6 +12,7 @@ public class Evaporation implements ProcessSubjects{
     /**
      * this class is a process subject for the soilwaterstore, it calculates the potEvapo based on the waterstore
      * of the soilStore, temp in degC and haude factor
+     * all calculations are based on the material given from the instructor
      */
     public double potEvapo;
     private double relHum14; // rel. humi at 14:00

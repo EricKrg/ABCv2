@@ -1,5 +1,10 @@
 package ekrueger;
 
+/**
+ * @author eric.krueger@uni-jena.de
+ *
+ */
+
 import ekrueger.Model.ABCv2;
 import ekrueger.Process.Evaporation;
 import ekrueger.Process.RunOff;

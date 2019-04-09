@@ -6,7 +6,17 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * @author eric.krueger@uni-jena.de
+ */
+
 public class RunOff implements ProcessSubjects {
+    /**
+     * this class is a process Subject for all Storage classes because all Storages are contributing to the
+     * final runOff, the runOff-Class calculates the final-runOff for the given time-step.
+     * After that it calculates the final Waterstores for all Storage-Classes, which are used as input for the
+     * next time step
+     */
     public SoilWaterStore soilWaterStore;
     public BaseStore baseStore;
     public DepStore depStore;

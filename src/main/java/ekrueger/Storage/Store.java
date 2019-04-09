@@ -1,12 +1,13 @@
 package ekrueger.Storage;
 
-import ekrueger.Model.EnvCon;
-
-/*
-base construction of a store, specific functions are implemented in the specific class
+/**
+ * @author eric.krueger@uni-jena.de
  */
 
 public abstract class Store {
+    /**
+     * base construction of a store, specific functions are implemented in the specific class
+    */
     public double runnOff;
     public double inWater; // input
     public double outWater; // abfluss

@@ -1,5 +1,9 @@
 package ekrueger.Storage;
 
+/**
+ * @author eric.krueger@uni-jena.de
+ */
+
 public class DepStore extends Store implements ProcessObserver {
     /*
     simple depository store
