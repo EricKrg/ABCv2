@@ -3,27 +3,54 @@ package ekrueger;
 import ekrueger.Model.ABCv2;
 import ekrueger.Model.Calibrator;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 /**
- *  main tester
+ *  main
+ * @author eric.krueger@uni-jena.de
  *
  */
-public class App 
-{
-    public static void main( String[] args )
-    {
+public class App {
+    /**
+     * Main method, calls the data reader first to have an data input (of data to calibrate and simulate).
+     * In the next step the model is calibrate, the calibrator class is called, all calibration takes place there
+     * finally the calibrate a,b and c values are used to run the simulation
+     * the ABCv2.properties file is used to set parameters of the calibration-model und simulation-model
+     */
 
-        DataReader data = new DataReader("./data/klima_schmuecke.txt");
-        DataReader calibData = new DataReader("./data/abfluss_gehlberg.txt");
-        ABCv2 calibModel = new ABCv2(0,data.getEnvData(), false, false,
-                0.9,0.4,0.6);
-        Calibrator calibrator = new Calibrator(calibModel,calibData, 1000);
 
-        ABCv2 myModel = new ABCv2(0, data.getEnvData(),true,true,
+    public static void main( String[] args ) {
+
+        Properties prop = new Properties();
+        InputStream input = null;
+
+        try {
+            input = new FileInputStream("/home/eric/projects/abc2/src/main/java/ABCv2.properties");
+            // load a properties file
+            prop.load(input);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                input.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        DataReader data = new DataReader(prop.getProperty("model.datapath"));
+        DataReader calibData = new DataReader(prop.getProperty("calib.datapath"));
+        ABCv2 calibModel = new ABCv2(0,data.getEnvData(), Boolean.parseBoolean(prop.getProperty("calib.verbose")),
+                Boolean.parseBoolean(prop.getProperty("calib.textout")), 0.9,0.4,0.6);
+        Calibrator calibrator = new Calibrator(calibModel,calibData, Integer.parseInt(prop.getProperty("calib.iterations")));
+
+        ABCv2 myModel = new ABCv2(0, data.getEnvData(),Boolean.parseBoolean(prop.getProperty("model.verbose")),
+                Boolean.parseBoolean(prop.getProperty("model.textout")),
                 calibrator.getA(), calibrator.getB(), calibrator.getC(), calibData);
         myModel.calibFit = calibrator.model.calibFit;
         myModel.execute();
-
-
-
     }
 }
