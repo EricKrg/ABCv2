@@ -27,7 +27,7 @@ public class Logger {
      */
     public  Logger(Object logFocus){
         this.loggingFocus = logFocus;
-        this.clearScreen();
+        //this.clearScreen();
     }
     public void log(Object someObjLog){
         System.out.println(someObjLog.getClass().getName());

@@ -40,6 +40,7 @@ public class SoilWaterStore extends Store implements ProcessObserver{
                 "inWater=" + inWater +
                 ", outWater=" + outWater +
                 ", waterStore=" + waterStore +
+                ", runOff=" + runnOff +
                 '}';
     }
 

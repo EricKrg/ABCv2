@@ -86,7 +86,7 @@ public class ABCv2 {
             // logging stuff
             //logger.progressPercentage(i,this.envData.size(), "simulate");
             logger.logABCv2(this, tempRunoff, evaporation, i, isTextOut(), isVerbose());
-            logger.clearScreen(); // somehow this wont work with ansii consoles i dont know why
+            //logger.clearScreen(); // somehow this wont work with ansii consoles i dont know why
             // old Storage for the next iteration
             oldSoil = soilWaterStore;
             oldBase = baseStore;
