@@ -85,6 +85,10 @@ public class Calibrator {
         if (bestModell == null){ return  null; }
         bestModell.setCalibFit("NSE", nse);
         bestModell.setCalibFit("cor", cor);
+        bestModell.setCalibFit("a", bestModell.a);
+        bestModell.setCalibFit("b", bestModell.b);
+        bestModell.setCalibFit("c", bestModell.c);
+
         return bestModell;
     }
 
